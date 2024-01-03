@@ -1,0 +1,15 @@
+version: "3.9"
+
+networks:
+  redis:
+    name: redis
+
+services:
+  redis:
+    container_name: redis
+    image: docker.io/library/redis:7
+    restart: unless-stopped
+    networks:
+      - redis
+    volumes:
+      - ./data/redis:/data

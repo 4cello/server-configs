@@ -1,0 +1,43 @@
+version: "3"
+
+networks:
+  cloudflared:
+    external: true
+  traefik:
+    external: true
+  postgres:
+    external: true
+  ohmyform:
+    name: ohmyform
+
+services:
+  ohmyform:
+    container_name: ohmyform
+    image: ohmyform/ohmyform
+    volumes:
+      - "./data:/data"
+    environment:
+      CREATE_ADMIN: "TRUE"
+      ADMIN_EMAIL: ohmyform@circacerulean.net
+      ADMIN_USERNAME: jg
+      ADMIN_PASSWORD: admin
+      DATABASE_DRIVER: postgres
+      DATABASE_URL: "postgresql://${OHMYFORM_DB_USER}:${OHMYFORM_DB_PASSWORD}@postgres:5432/ohmyform"
+      MAILER_URI: smtp://${OHMYFORM_MAIL_USER}:${OHMYFORM_MAIL_PASSWORD}:smtp.ionos.de:587
+    networks:
+      - cloudflared
+      - traefik
+      - postgres
+      - ohmyform
+    ports:
+      - "7017:3000"
+    restart: unless-stopped
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.ohmyform.rule: Host(`ohmyform.circacerulean.net`)
+      traefik.http.routers.ohmyform.entrypoints: web,web-tls
+      traefik.http.routers.ohmyform.tls: true
+      traefik.http.routers.ohmyform.tls.certresolver: letsencrypt
+      traefik.http.services.ohmyform.loadbalancer.server.port: 3000
+

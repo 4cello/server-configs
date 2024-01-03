@@ -1,0 +1,29 @@
+version: "3.8"
+
+networks:
+  traefik:
+    external: true
+  owncast:
+    name: owncast
+
+services:
+  owncast:
+    container_name: owncast
+    image: owncast/owncast:latest
+    restart: unless-stopped
+    networks:
+      - traefik
+      - owncast
+    ports:
+      - 7487:8080
+      - 1935:1935
+    volumes:
+      - ./data:/app/data
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.owncast.rule: Host(`owncast.circacerulean.net`)
+      traefik.http.routers.owncast.entrypoints: web,web-tls
+      traefik.http.routers.owncast.tls: true
+      traefik.http.routers.owncast.tls.certresolver: letsencrypt
+      traefik.http.services.owncast.loadbalancer.server.port: 8080

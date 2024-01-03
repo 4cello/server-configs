@@ -1,0 +1,34 @@
+version: "3.8"
+
+networks:
+  traefik:
+    external: true
+  dashy:
+    name: dashy
+
+services:
+  dashy:
+    container_name: dashy
+    image: lissy93/dashy
+    restart: unless-stopped
+    entrypoint: ["yarn", "build-and-start"]
+    networks:
+      - traefik
+      - dashy
+    ports:
+      - 4000:80
+    environment:
+      NODE_ENV: production
+      UID: 1000
+      GID: 1000
+    volumes:
+      - ./dashy.yml:/app/public/conf.yml
+      - ./pages:/app/public/pages
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.dashy.rule: Host(`dashy.circacerulean.net`)
+      traefik.http.routers.dashy.entrypoints: web,web-tls
+      traefik.http.routers.dashy.tls: true
+      traefik.http.routers.dashy.tls.certresolver: letsencrypt
+      traefik.http.services.dashy.loadbalancer.server.port: 80

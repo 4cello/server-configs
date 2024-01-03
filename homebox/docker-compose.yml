@@ -1,0 +1,34 @@
+version: "3.8"
+
+networks:
+  traefik:
+    external: true
+  homebox:
+    name: homebox
+
+services:
+  homebox:
+    container_name: homebox
+    image: ghcr.io/hay-kot/homebox:latest 
+    restart: unless-stopped
+    networks:
+      - traefik
+      - homebox
+    ports:
+      - 7745:7745
+    volumes:
+      - ./data:/data
+    environment:
+      HBOX_LOG_LEVEL: info
+      HBOX_LOG_FORMAT: text
+      HBOX_WEB_MAX_UPLOAD_SIZE: 10
+      HBOX_OPTIONS_ALLOW_REGISTRATION: false
+      HBOX_SWAGGER_HOST: 7745
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.homebox.rule: Host(`homebox.circacerulean.net`)
+      traefik.http.routers.homebox.entrypoints: web,web-tls
+      traefik.http.routers.homebox.tls: true
+      traefik.http.routers.homebox.tls.certresolver: letsencrypt
+      traefik.http.services.homebox.loadbalancer.server.port: 7745

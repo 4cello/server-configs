@@ -1,0 +1,31 @@
+version: "3.9"
+
+networks:
+  traefik:
+    external: true
+  cloudflared:
+    external: true
+  vaultwarden:
+    name: vaultwarden
+
+services:
+  vaultwarden:
+    container_name: vaultwarden
+    image: vaultwarden/server:latest
+    restart: unless-stopped
+    networks:
+      - traefik
+      - cloudflared
+      - vaultwarden
+    ports:
+      - 8083:80
+    volumes:
+      - ./data:/data
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.vaultwarden.rule: Host(`vaultwarden.circacerulean.net`)
+      traefik.http.routers.vaultwarden.entrypoints: web,web-tls
+      traefik.http.routers.vaultwarden.tls: true
+      traefik.http.routers.vaultwarden.tls.certresolver: letsencrypt
+      traefik.http.services.vaultwarden.loadbalancer.server.port: 80

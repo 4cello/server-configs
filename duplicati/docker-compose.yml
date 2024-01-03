@@ -1,0 +1,34 @@
+version: "3.8"
+
+networks:
+  traefik:
+    external: true
+  duplicati:
+    name: duplicati
+
+services:
+  duplicati:
+    container_name: duplicati
+    image: lscr.io/linuxserver/duplicati:latest 
+    restart: unless-stopped
+    networks:
+      - traefik
+      - duplicati
+    ports:
+      - 8200:8200
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Etc/UTC
+    volumes:
+      - ./config:/config
+      - /mnt/carracosta/backups:/backups
+      - /:/source/host
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.duplicati.rule: Host(`duplicati.circacerulean.net`)
+      traefik.http.routers.duplicati.entrypoints: web,web-tls
+      traefik.http.routers.duplicati.tls: true
+      traefik.http.routers.duplicati.tls.certresolver: letsencrypt
+      traefik.http.services.duplicati.loadbalancer.server.port: 8200

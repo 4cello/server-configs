@@ -1,0 +1,146 @@
+appConfig:
+  theme: crayola
+  layout: auto
+  iconSize: medium
+  language: en
+pageInfo:
+  title: Dashy
+  description: Welcome to your new dashboard!
+  navLinks:
+    - title: GitHub
+      path: https://github.com/Lissy93/dashy
+    - title: Documentation
+      path: https://dashy.to/docs
+  footerText: ''
+sections:
+  - name: Alltägliches
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 1
+      collapsed: false
+      hideForGuests: false
+    items:
+      - title: Vaultwarden
+        description: Passwort Manager
+        icon: hl-bitwarden
+        url: https://vaultwarden.circacerulean.net
+        id: 0_1360_vaultwarden
+      - title: Homebox
+        description: Inventarmanagement
+        icon: hl-homebox
+        url: https://homebox.circacerulean.net
+        id: 1_1360_homebox
+      - title: Paperless
+        description: ''
+        icon: hl-paperless
+        url: https://paperless.circacerulean.net
+        id: 2_1360_paperless
+      - title: Photoprism
+        description: ''
+        icon: hl-photoprism
+        url: https://photoprism.circacerulean.net
+        id: 3_1360_photoprism
+      - title: ScanservJS
+        description: Scanner
+        icon: 🖨️
+        url: https://scanservjs.circacerulean.net
+        id: 4_1360_scanservjs
+      - title: Tandoor
+        description: Rezepte
+        icon: hl-tandoor
+        url: https://tandoor.circacerulean.net/
+        id: 5_1360_tandoor
+  - name: Smart Home
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 1
+      collapsed: false
+      hideForGuests: false
+    items:
+      - title: Home Assistant
+        description: Everything Smart Home
+        icon: hl-home-assistant
+        url: https://homeassistant.circacerulean.net
+        id: 0_944_homeassistant
+      - title: Node-RED
+        description: Flow-Automatisierung
+        icon: hl-nodered
+        url: https://nodered.circacerulean.net
+        id: 1_944_nodered
+      - title: Zigbee2MQTT
+        description: Zigbee-Verwaltung
+        icon: hl-zigbee2mqtt
+        url: https://z2m.circacerulean.net
+        id: 2_944_zigbeemqtt
+  - name: Netzwerk
+    icon: ''
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 1
+      collapsed: false
+      hideForGuests: false
+    items:
+      - title: Traefik
+        description: Service-Netzwerk-Gedöns
+        icon: hl-traefik
+        url: https://traefik.circacerulean.net
+        id: 0_858_traefik
+      - title: Pi-hole
+        description: Adblocker & Local DNS
+        icon: hl-pi-hole
+        url: https://pihole.circacerulean.net
+        id: 1_858_pihole
+      - title: Tailscale
+        description: VPN
+        icon: hl-tailscale-light
+        url: https://login.tailscale.com/admin/machines
+        id: 2_858_tailscale
+      - title: Portainer
+        description: Container-Verwaltung
+        icon: hl-portainer
+        url: https://portainer.circacerulean.net
+        id: 3_858_portainer
+      - title: What's Up Docker
+        icon: ':tokyo_tower:'
+        url: https://wud.circacerulean.net
+        id: 4_858_whatsupdocker
+  - name: Webservices
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 1
+      collapsed: false
+      hideForGuests: false
+    items:
+      - title: Cellistas
+        description: Noten-Datenbank
+        icon: ':violin:'
+        url: https://cellistas.circacerulean.net
+        id: 0_1154_cellistas
+      - title: Crosswords
+        description: Kreuzworträtsel
+        icon: U+1F9E9
+        url: https://crosswords.circacerulean.net
+        id: 1_1154_crosswords
+      - title: NFL Match Icons
+        description: Icon Generator for NFL Matchups
+        icon: ':football:'
+        url: https://nflicons.circacerulean.net
+        id: 2_1154_nflmatchicons
+      - title: RTMPie
+        description: Local Streams
+        icon: 🎞️
+        url: https://rtmpie.circacerulean.net
+        id: 3_1154_rtmpie
+      - title: OhMyForm
+        description: Formulare und Umfragen
+        icon: ':pencil:'
+        url: https://ohmyform.circacerulean.net
+        id: 4_1154_ohmyform
+      - title: Pokelabels
+        icon: 🏷️
+        url: https://pokelabels.circacerulean.net
+        id: 5_1154_pokelabels

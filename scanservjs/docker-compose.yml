@@ -1,0 +1,46 @@
+version: "3.8"
+
+networks:
+  traefik:
+    external: true
+  paperless:
+    external: true
+  scanservjs:
+    name: scanservjs
+
+services:
+  scanservjs:
+    container_name: scanservjs
+    image: sbs20/scanservjs:latest
+    restart: unless-stopped
+    networks:
+      - traefik
+      - scanservjs
+    ports:
+      - 8383:8080
+    volumes:
+      - /var/run/dbus:/var/run/dbus
+      - ./config:/app/config
+      - ./scans:/app/data/output
+    environment:
+      AIRSCAN_DEVICES: '"HP Deskjet 2540" = "http://192.168.144.72:8080/eSCL";'
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.scanservjs.rule: Host(`scanservjs.circacerulean.net`)
+      traefik.http.routers.scanservjs.entrypoints: web,web-tls
+      traefik.http.routers.scanservjs.tls: true
+      traefik.http.routers.scanservjs.tls.certresolver: letsencrypt
+      traefik.http.services.scanservjs.loadbalancer.server.port: 8080
+
+  scantopl:
+    container_name: scanservjs-scantopl
+    image: ghcr.io/celedhrim/scantopl:master
+    restart: unless-stopped
+    networks:
+      - paperless
+    volumes:
+      - ./scans:/output
+    environment:
+      PLURL: ${PAPERLESS_URL}
+      PLTOKEN: ${PAPERLESS_TOKEN}

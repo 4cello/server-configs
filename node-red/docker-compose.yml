@@ -1,0 +1,33 @@
+version: "3.9"
+
+networks:
+  traefik:
+    external: true
+  mqtt:
+    external: true
+  node-red:
+    name: node-red
+
+services:
+  node-red:
+    container_name: node-red
+    image: nodered/node-red:latest
+    restart: unless-stopped
+    networks:
+      - traefik
+      - mqtt
+      - node-red
+    ports:
+      - 1880:1880
+    volumes:
+      - ./data:/data
+    environment:
+      - TZ=Europe/Berlin
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.nodered.rule: Host(`nodered.circacerulean.net`)
+      traefik.http.routers.nodered.entrypoints: web,web-tls
+      traefik.http.routers.nodered.tls: true
+      traefik.http.routers.nodered.tls.certresolver: letsencrypt
+      traefik.http.services.nodered.loadbalancer.server.port: 1880

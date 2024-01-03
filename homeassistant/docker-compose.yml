@@ -1,0 +1,33 @@
+version: "3.8"
+
+networks:
+  traefik:
+    external: true
+  mqtt:
+    external: true
+  homeassistant:
+    name: homeassistant
+
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    restart: unless-stopped
+    networks:
+      - traefik
+      - mqtt
+      - homeassistant
+    ports:
+      - 8123:8123
+      - 5683:5683/udp
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./config:/config
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.homeassistant.rule: Host(`homeassistant.circacerulean.net`)
+      traefik.http.routers.homeassistant.entrypoints: web,web-tls
+      traefik.http.routers.homeassistant.tls: true
+      traefik.http.routers.homeassistant.tls.certresolver: letsencrypt
+      traefik.http.services.homeassistant.loadbalancer.server.port: 8123

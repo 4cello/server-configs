@@ -1,0 +1,31 @@
+version: "3.8"
+
+networks:
+  traefik:
+    external: true
+  postgres:
+    name: postgres
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:15.4
+    restart: unless-stopped
+    networks:
+      - traefik
+      - postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    labels:
+      traefik.enable: false
+      traefik.docker.network: traefik
+      traefik.tcp.routers.postgres.rule: HostSNI(`postgres.circacerulean.net`)
+      traefik.tcp.routers.postgres.entrypoints: dbsecure
+      traefik.tcp.routers.postgres.tls: true
+      traefik.tcp.routers.postgres.tls.certresolver: letsencrypt
+      traefik.tcp.services.postgres.loadbalancer.server.port: 5432

@@ -1,0 +1,34 @@
+version: "3.8"
+
+networks:
+  traefik:
+    external: true
+  postgres:
+    external: true
+  pgadmin:
+    name: pgadmin
+
+services:
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped
+    networks:
+      - traefik
+      - postgres
+      - pgadmin
+    ports:
+      - 5480:80
+    volumes:
+      - ./data:/var/lib/pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.pgadmin.rule: Host(`pgadmin.circacerulean.net`)
+      traefik.http.routers.pgadmin.entrypoints: web,web-tls
+      traefik.http.routers.pgadmin.tls: true
+      traefik.http.routers.pgadmin.tls.certresolver: letsencrypt
+      traefik.http.services.pgadmin.loadbalancer.server.port: 80
