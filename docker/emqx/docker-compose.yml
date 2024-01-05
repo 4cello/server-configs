@@ -1,0 +1,42 @@
+version: "3.8"
+
+networks:
+  traefik:
+    external: true
+  emqx:
+    name: emqx
+
+services:
+  emqx:
+    container_name: emqx
+    image: emqx:latest 
+    restart: unless-stopped
+    user: 1000:1000
+    networks:
+      - traefik
+      - emqx
+    ports:
+      - 18083:18083
+      - 1883:1883
+    volumes:
+      - vol-emqx-data:/opt/emqx/data
+      - vol-emqx-etc:/opt/emqx/etc
+      - vol-emqx-log:/opt/emqx/log
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.emqx.rule: Host(`emqx.circacerulean.net`)
+      traefik.http.routers.emqx.entrypoints: web,web-tls
+      traefik.http.routers.emqx.tls: true
+      traefik.http.routers.emqx.tls.certresolver: letsencrypt
+      traefik.http.services.emqx.loadbalancer.server.port: 18083
+      traefik.http.routers.emqx.tls.domains[0].main: circacerulean.net
+      traefik.http.routers.emqx.tls.domains[0].sans: "*.circacerulean.net"
+
+volumes:
+  vol-emqx-data:
+    name: emqx-data
+  vol-emqx-etc:
+    name: emqx-etc
+  vol-emqx-log:
+    name: emqx-log

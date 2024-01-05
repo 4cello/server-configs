@@ -21,7 +21,7 @@ services:
     environment:
       PUID: 1000
       PGID: 1000
-      APP_URL: bookstack.circacerulean.net
+      APP_URL: https://bookstack.circacerulean.net
       DB_HOST: bookstack_db
       DB_PORT: 3306
       DB_USER: bookstack
@@ -37,12 +37,14 @@ services:
       traefik.http.routers.bookstack.tls: true
       traefik.http.routers.bookstack.tls.certresolver: letsencrypt
       traefik.http.routers.bookstack.tls.domains[0].main: circacerulean.net
-      traefik.http.routers.bookstack.tls.domains[0].sans: *.circacerulean.net
+      traefik.http.routers.bookstack.tls.domains[0].sans: "*.circacerulean.net"
       traefik.http.services.bookstack.loadbalancer.server.port: 80
 
   bookstack_db:
     image: lscr.io/linuxserver/mariadb
     container_name: bookstack_db
+    networks:
+      - bookstack
     environment:
       PUID: 1000
       PGID: 1000

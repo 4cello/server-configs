@@ -3,7 +3,7 @@ version: '3.8'
 networks:
   traefik:
     external: true
-  mqtt:
+  emqx:
     external: true
   zigbee2mqtt:
     name: zigbee2mqtt
@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
     networks:
       - traefik
-      - mqtt
+      - emqx
       - zigbee2mqtt
     volumes:
       - ./data:/app/data
@@ -33,4 +33,6 @@ services:
       traefik.http.routers.zigbee2mqtt.entrypoints: web,web-tls
       traefik.http.routers.zigbee2mqtt.tls: true
       traefik.http.routers.zigbee2mqtt.tls.certresolver: letsencrypt
+      traefik.http.routers.zigbee2mqtt.tls.domains[0].main: circacerulean.net
+      traefik.http.routers.zigbee2mqtt.tls.domains[0].sans: "*.circacerulean.net"
       traefik.http.services.zigbee2mqtt.loadbalancer.server.port: 8080
