@@ -1,0 +1,8 @@
+[Unit]
+Description=Dumps database '%i' from Postgres on localhost to file
+
+[Service]
+Type=oneshot
+Environment="DUMP_DIR=/mnt/sharpedo/export/postgres"
+ExecStart=pg_dump --host=localhost --username=jg --dbname=%i --file=${DUMP_DIR}/%i.sql
+User=jg

@@ -1,0 +1,30 @@
+version: "3.8"
+
+networks:
+  traefik:
+    external: true
+  nocodb:
+    name: nocodb
+
+services:
+  nocodb:
+    container_name: nocodb
+    image: nocodb/nocodb:latest
+    restart: unless-stopped
+    networks:
+      - traefik
+      - nocodb
+    ports:
+      - 8780:8080
+    volumes:
+      - ./data:/usr/app/data/
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.nocodb.rule: Host(`nocodb.circacerulean.net`)
+      traefik.http.routers.nocodb.entrypoints: web,web-tls
+      traefik.http.routers.nocodb.tls: true
+      traefik.http.routers.nocodb.tls.certresolver: letsencrypt
+      traefik.http.routers.nocodb.tls.domains[0].main: circacerulean.net
+      traefik.http.routers.nocodb.tls.domains[0].sans: "*.circacerulean.net"
+      traefik.http.services.nocodb.loadbalancer.server.port: 8080

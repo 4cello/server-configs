@@ -25,6 +25,7 @@ services:
     labels:
       traefik.enable: true
       traefik.docker.network: traefik
+      traefik.http.routers.emqx.service: emqx
       traefik.http.routers.emqx.rule: Host(`emqx.circacerulean.net`)
       traefik.http.routers.emqx.entrypoints: web,web-tls
       traefik.http.routers.emqx.tls: true
@@ -32,6 +33,14 @@ services:
       traefik.http.services.emqx.loadbalancer.server.port: 18083
       traefik.http.routers.emqx.tls.domains[0].main: circacerulean.net
       traefik.http.routers.emqx.tls.domains[0].sans: "*.circacerulean.net"
+      traefik.http.routers.emqx-mqtt.service: emqx-mqtt
+      traefik.http.routers.emqx-mqtt.rule: Host(`mqtt.circacerulean.net`)
+      traefik.http.routers.emqx-mqtt.entrypoints: web-tls
+      traefik.http.routers.emqx-mqtt.tls: true
+      traefik.http.routers.emqx-mqtt.tls.certresolver: letsencrypt
+      traefik.http.services.emqx-mqtt.loadbalancer.server.port: 8083
+      traefik.http.routers.emqx-mqtt.tls.domains[0].main: circacerulean.net
+      traefik.http.routers.emqx-mqtt.tls.domains[0].sans: "*.circacerulean.net"
 
 volumes:
   vol-emqx-data:

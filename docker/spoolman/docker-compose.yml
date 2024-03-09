@@ -1,0 +1,30 @@
+version: "3.8"
+
+networks:
+  traefik:
+    external: true
+  spoolman:
+    name: spoolman
+
+services:
+  spoolman:
+    container_name: spoolman
+    image: ghcr.io/donkie/spoolman:latest
+    restart: unless-stopped
+    networks:
+      - traefik
+      - spoolman
+    ports:
+      - 7912:8000
+    volumes:
+      - ./data:/home/app/.local/share/spoolman
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.spoolman.rule: Host(`spoolman.circacerulean.net`)
+      traefik.http.routers.spoolman.entrypoints: web,web-tls
+      traefik.http.routers.spoolman.tls: true
+      traefik.http.routers.spoolman.tls.certresolver: letsencrypt
+      traefik.http.routers.spoolman.tls.domains[0].main: circacerulean.net
+      traefik.http.routers.spoolman.tls.domains[0].sans: "*.circacerulean.net"
+      traefik.http.services.spoolman.loadbalancer.server.port: 8000

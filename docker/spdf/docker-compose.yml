@@ -1,0 +1,34 @@
+version: "3.8"
+
+networks:
+  traefik:
+    external: true
+  spdf:
+    name: spdf
+
+services:
+  spdf:
+    container_name: spdf
+    image: frooodle/s-pdf:latest
+    restart: unless-stopped
+    networks:
+      - traefik
+      - spdf
+    ports:
+      - 8422:8080
+    volumes:
+      - ./trainingdata:/usr/share/tesseract-ocr/4.00/tessdata
+      - ./config:/configs
+      - ./customfiles:/customFiles
+    environment:
+      DOCKER_ENABLE_SECURITY: false
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.spdf.rule: Host(`spdf.circacerulean.net`)
+      traefik.http.routers.spdf.entrypoints: web,web-tls
+      traefik.http.routers.spdf.tls: true
+      traefik.http.routers.spdf.tls.certresolver: letsencrypt
+      traefik.http.routers.spdf.tls.domains[0].main: circacerulean.net
+      traefik.http.routers.spdf.tls.domains[0].sans: "*.circacerulean.net"
+      traefik.http.services.spdf.loadbalancer.server.port: 8080 

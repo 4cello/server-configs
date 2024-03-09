@@ -1,0 +1,64 @@
+version: "3.8"
+
+networks:
+  traefik:
+    external: true
+  cloudflared:
+    external: true
+  minecraft:
+    name: minecraft
+    ipam:
+      driver: default
+      config:
+        - subnet:  172.17.16.0/20
+
+services:
+  minecraft:
+    container_name: minecraft
+    image: itzg/minecraft-server
+    restart: unless-stopped
+    networks:
+      cloudflared:
+      traefik:
+      minecraft:
+        ipv4_address: 172.17.16.3
+    ports:
+      - 25123:8123
+      - 25565:25565
+    volumes:
+      - ${MODPACK_FOLDER}/data:/data
+    env_file: ${MODPACK_FOLDER}/docker.env
+    environment:
+      EULA: true
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.minecraft.rule: Host(`minecraft.circacerulean.net`)
+      traefik.http.routers.minecraft.entrypoints: web,web-tls
+      traefik.http.routers.minecraft.tls: true
+      traefik.http.routers.minecraft.tls.certresolver: letsencrypt
+      traefik.http.routers.minecraft.tls.domains[0].main: circacerulean.net
+      traefik.http.routers.minecraft.tls.domains[0].sans: "*.circacerulean.net"
+      traefik.http.services.minecraft.loadbalancer.server.port: 8123
+
+#  ngrok:
+#    container_name: minecraft-ngrok
+#    image: ngrok/ngrok:alpine 
+#    restart: unless-stopped
+#    networks:
+#      - minecraft
+#    volumes:
+#      - ./ngrok.yml:/etc/ngrok.yml
+#    environment:
+#      NGROK_CONFIG: /etc/ngrok.yml
+#      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN}
+#    command: tcp 25565
+
+  playit:
+    container_name: playit
+    image: embeddedt/playit
+    stop_grace_period: 1s
+    networks:
+      - minecraft
+    volumes:
+      - ./playit:/etc/playit

@@ -1,0 +1,6 @@
+version: 2
+
+tunnels:
+  minecraft:
+    proto: tcp
+    addr: 172.17.16.3:25565
