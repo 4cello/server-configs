@@ -1,0 +1,35 @@
+version: "3.8"
+
+networks:
+  traefik:
+    external: true
+  loki:
+    external: true
+  grafana:
+    name: grafana
+
+services:
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    restart: unless-stopped
+    user: "1000"
+    networks:
+      - traefik
+      - loki
+      - grafana
+    ports:
+      - 7030:3000
+    volumes:
+      - ./data:/var/lib/grafana
+    labels:
+      traefik.enable: true
+      traefik.docker.network: traefik
+      traefik.http.routers.grafana.rule: Host(`grafana.circacerulean.net`)
+      traefik.http.routers.grafana.entrypoints: web,web-tls
+      traefik.http.routers.grafana.tls: true
+      traefik.http.routers.grafana.tls.certresolver: letsencrypt 
+      traefik.http.routers.grafana.tls.domains[0].main: circacerulean.net
+      traefik.http.routers.grafana.tls.domains[0].sans: "*.circacerulean.net"
+      traefik.http.services.grafana.loadbalancer.server.port: 3000
+

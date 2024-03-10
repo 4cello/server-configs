@@ -32,7 +32,9 @@ services:
       traefik.http.routers.tandoor.entrypoints: web,web-tls
       traefik.http.routers.tandoor.tls: true
       traefik.http.routers.tandoor.tls.certresolver: letsencrypt
-      traefik.http.services.tandoor.loadbalancer.server.port: 80
+      traefik.http.routers.tandoor.tls.domains[0].main: circacerulean.net
+      traefik.http.routers.tandoor.tls.domains[0].sans: "*.circacerulean.net"
+      traefik.http.services.tandoor-nginx.loadbalancer.server.port: 80
 
   web_recipes:
     container_name: tandoor-web

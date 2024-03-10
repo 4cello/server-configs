@@ -31,4 +31,6 @@ services:
       traefik.http.routers.dashy.entrypoints: web,web-tls
       traefik.http.routers.dashy.tls: true
       traefik.http.routers.dashy.tls.certresolver: letsencrypt
+      traefik.http.routers.dashy.tls.domains[0].main: circacerulean.net
+      traefik.http.routers.dashy.tls.domains[0].sans: "*.circacerulean.net"
       traefik.http.services.dashy.loadbalancer.server.port: 80

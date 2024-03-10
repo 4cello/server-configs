@@ -24,6 +24,8 @@ services:
       traefik.http.routers.pihole.entrypoints: web,web-tls
       traefik.http.routers.pihole.tls: true
       traefik.http.routers.pihole.tls.certresolver: letsencrypt
+      traefik.http.routers.pihole.tls.domains[0].main: circacerulean.net
+      traefik.http.routers.pihole.tls.domains[1].sans: "*.circacerulean.net"
       #traefik.http.routers.pihole.middlewares: add-admin@docker
       #traefik.http.middlewares.add-admin.addprefix.prefix: "/admin"
       traefik.http.services.pihole.loadbalancer.server.port: 80

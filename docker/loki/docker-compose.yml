@@ -1,0 +1,31 @@
+version: "3.9"
+
+networks:
+  loki:
+    name: loki
+
+services:
+  loki:
+    container_name: loki
+    image: grafana/loki:latest
+    restart: unless-stopped
+    networks:
+      - loki
+    ports:
+      - 3100:3100
+    command: -config.file=/etc/loki/loki-config.yml
+    volumes:
+      - ./loki:/etc/loki
+
+  promtail:
+    container_name: promtail
+    image: grafana/promtail:latest
+    restart: unless-stopped
+    networks:
+      - loki
+    ports:
+      - 1515:1514
+    command: -config.file=/etc/promtail/promtail-config.yml
+    volumes:
+      - ./promtail:/etc/promtail
+      - /var/run/docker.sock:/var/run/docker.sock:ro
